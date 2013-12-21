@@ -14,13 +14,13 @@ def process(original, corrected):
 
     try:
         # Skip the first 2 lines of the diff output (the header lines)
-        gen.next()
-        gen.next()
+        next(gen)
+        next(gen)
     except StopIteration:
         # There was no diff output, no violations to return
         return []
 
-    current_line = parse_starting_line_num(gen.next())
+    current_line = parse_starting_line_num(next(gen))
 
     all_violations = []
 
@@ -84,7 +84,7 @@ def process_chunk(line_num, original_lines, corrected_lines):
     violations = []
 
     if len(original_lines) == len(corrected_lines):
-        for i in xrange(0, len(original_lines)):
+        for i in range(0, len(original_lines)):
             column = string_diff_column(original_lines[i], corrected_lines[i])
             message = create_message(original_lines[i], corrected_lines[i])
             violations.append(Violation(line_num + i, column, message))
@@ -94,18 +94,18 @@ def process_chunk(line_num, original_lines, corrected_lines):
         violations.append(v)
 
     elif len(original_lines) < len(corrected_lines):
-        for i in xrange(0, len(original_lines)):
+        for i in range(0, len(original_lines)):
             column = string_diff_column(original_lines[i], corrected_lines[i])
             message = create_message(original_lines[i], corrected_lines[i])
             violations.append(Violation(line_num + i, column, message))
 
     elif len(corrected_lines) == 0:
-        for i in xrange(0, len(original_lines)):
+        for i in range(0, len(original_lines)):
             v = Violation(line_num + i, 1, "")
             violations.append(v)
 
     elif len(original_lines) > len(corrected_lines):
-        for i in xrange(0, len(corrected_lines)):
+        for i in range(0, len(corrected_lines)):
             column = string_diff_column(original_lines[i], corrected_lines[i])
             message = create_message(original_lines[i], corrected_lines[i])
             violations.append(Violation(line_num + i, column, message))
@@ -149,7 +149,7 @@ def string_diff_column(str1, str2):
     1
     """
     c = 1
-    for i in xrange(0, min(len(str1), len(str2))):
+    for i in range(0, min(len(str1), len(str2))):
         c = i
         if str1[i] != str2[i]:
             break
@@ -167,7 +167,7 @@ def read_file(filename):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print "Usage: " + sys.argv[0] + " FILE"
+        print("Usage: " + sys.argv[0] + " FILE")
         sys.exit(1)
 
     original_filename = sys.argv[1]
@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     for v in violations:
         v.filename = original_filename
-        print v
+        print(v)
 
     if len(violations) == 0:
         # No violtaions: success!
