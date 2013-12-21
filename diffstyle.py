@@ -14,13 +14,13 @@ def process(original, corrected):
 
     try:
         # Skip the first 2 lines of the diff output (the header lines)
-        gen.next()
-        gen.next()
+        next(gen)
+        next(gen)
     except StopIteration:
         # There was no diff output, no violations to return
         return []
 
-    current_line = parse_starting_line_num(gen.next())
+    current_line = parse_starting_line_num(next(gen))
 
     all_violations = []
 
