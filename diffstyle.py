@@ -167,7 +167,7 @@ def read_file(filename):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print "Usage: " + sys.argv[0] + " FILE"
+        print("Usage: " + sys.argv[0] + " FILE")
         sys.exit(1)
 
     original_filename = sys.argv[1]
@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     for v in violations:
         v.filename = original_filename
-        print v
+        print(v)
 
     if len(violations) == 0:
         # No violtaions: success!
