@@ -84,7 +84,7 @@ def process_chunk(line_num, original_lines, corrected_lines):
     violations = []
 
     if len(original_lines) == len(corrected_lines):
-        for i in xrange(0, len(original_lines)):
+        for i in range(0, len(original_lines)):
             column = string_diff_column(original_lines[i], corrected_lines[i])
             message = create_message(original_lines[i], corrected_lines[i])
             violations.append(Violation(line_num + i, column, message))
@@ -94,18 +94,18 @@ def process_chunk(line_num, original_lines, corrected_lines):
         violations.append(v)
 
     elif len(original_lines) < len(corrected_lines):
-        for i in xrange(0, len(original_lines)):
+        for i in range(0, len(original_lines)):
             column = string_diff_column(original_lines[i], corrected_lines[i])
             message = create_message(original_lines[i], corrected_lines[i])
             violations.append(Violation(line_num + i, column, message))
 
     elif len(corrected_lines) == 0:
-        for i in xrange(0, len(original_lines)):
+        for i in range(0, len(original_lines)):
             v = Violation(line_num + i, 1, "")
             violations.append(v)
 
     elif len(original_lines) > len(corrected_lines):
-        for i in xrange(0, len(corrected_lines)):
+        for i in range(0, len(corrected_lines)):
             column = string_diff_column(original_lines[i], corrected_lines[i])
             message = create_message(original_lines[i], corrected_lines[i])
             violations.append(Violation(line_num + i, column, message))
@@ -149,7 +149,7 @@ def string_diff_column(str1, str2):
     1
     """
     c = 1
-    for i in xrange(0, min(len(str1), len(str2))):
+    for i in range(0, min(len(str1), len(str2))):
         c = i
         if str1[i] != str2[i]:
             break
