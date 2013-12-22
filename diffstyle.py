@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import difflib
+import optparse
 import sys
 
 
@@ -166,16 +167,33 @@ def read_file(filename):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: " + sys.argv[0] + " FILE")
-        sys.exit(1)
+    usage = "usage: %prog FILE [-c CORRECTED_FILE]"
+    parser = optparse.OptionParser(usage=usage)
 
-    original_filename = sys.argv[1]
+    files_group = optparse.OptionGroup(parser, "Files")
+
+    files_group.add_option("-c",
+                           action="store",
+                           type="string",
+                           dest="corrected_filename",
+                           metavar="CORRECTED_FILE",
+                           help=("File that the input file should be compared "
+                                 "with. If not supplied, will be read from "
+                                 "stdin"))
+
+    parser.add_option_group(files_group)
+
+    options, args = parser.parse_args()
+
+    if len(args) != 1:
+        parser.error("You must supply an input file")
+
+    original_filename = args[0]
 
     original_file = read_file(original_filename)
 
-    if len(sys.argv) == 3:
-        corrected_file = read_file(sys.argv[2])
+    if options.corrected_filename:
+        corrected_file = read_file(options.corrected_filename)
     else:
         corrected_file = sys.stdin.readlines()
 
@@ -189,4 +207,4 @@ if __name__ == "__main__":
         # No violtaions: success!
         sys.exit(0)
     else:
-        sys.exit(2)
+        sys.exit(1)
