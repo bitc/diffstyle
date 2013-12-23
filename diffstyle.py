@@ -57,21 +57,28 @@ class Violation(object):
         self.text = text
         self.filename = None
 
+    def get_message(self):
+        if self.text:
+            return "Fix Style, should be: " + self.text
+        else:
+            return "Invalid Whitespace"
+
     def __repr__(self):
         filenameStr = self.filename
 
         if not filenameStr:
             filenameStr = "<unknown>"
 
-        if self.text:
-            message = "Fix Style, should be: " + self.text
-        else:
-            message = "Invalid Whitespace"
-
         return filenameStr + ':' + \
             str(self.line) + ':' + \
             str(self.col) + ': ' + \
-            message
+            self.get_message()
+
+    def format_msg(self, msg_template):
+        return msg_template.format(path=self.filename,
+                                   line=self.line,
+                                   col=self.col,
+                                   msg=self.get_message())
 
 
 def create_message(original_line, corrected_line):
@@ -167,8 +174,20 @@ def read_file(filename):
 
 
 if __name__ == "__main__":
-    usage = "usage: %prog FILE [-c CORRECTED_FILE]"
+    usage = "usage: %prog [--msg-template=TEMPLATE] FILE [-c CORRECTED_FILE]"
     parser = optparse.OptionParser(usage=usage)
+
+    parser.add_option("--msg-template",
+                      action="store",
+                      type="string",
+                      dest="msg_template",
+                      metavar="TEMPLATE",
+                      help=("Template used to display messages. This is a "
+                            "python new-style format string used to format "
+                            "the message information. See doc for all "
+                            "details"))
+
+    parser.set_defaults(msg_template="{path}:{line}:{col}: {msg}")
 
     files_group = optparse.OptionGroup(parser, "Files")
 
@@ -201,7 +220,7 @@ if __name__ == "__main__":
 
     for v in violations:
         v.filename = original_filename
-        print(v)
+        print(v.format_msg(options.msg_template))
 
     if len(violations) == 0:
         # No violtaions: success!
